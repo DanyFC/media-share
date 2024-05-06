@@ -14,6 +14,7 @@ export const authenticateUser = async (req, res) => {
           { userName: account }
         ]
       })
+
       if (!user) {
         return res
           .status(404)
@@ -54,6 +55,11 @@ export const userAuthenticated = async (req, res) => {
   const errors = expressValidator(req, res)
   if (!errors) {
     try {
+      if (req.body.errors) {
+        return res
+          .status(401)
+          .json({ errors: req.body.errors })
+      }
       const { userId } = req.body
       const user = await User.findById(userId)
       if (!user) {

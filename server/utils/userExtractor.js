@@ -9,10 +9,8 @@ export const userExtractor = (req, res, next) => {
   try {
     const decodedToken = jwt.verify(token, process.env.SECRET)
     req.body.userId = decodedToken.userId
-    next()
   } catch (err) {
-    return res
-      .status(401)
-      .json({ errors: [{ msg: 'No valid token provided.' }] })
+    req.body.errors = [{ msg: 'No valid token provided.' }]
   }
+  next()
 }
