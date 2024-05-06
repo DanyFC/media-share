@@ -1,0 +1,11 @@
+{
+  "name": "media-share",
+  "version": "1.0.0",
+  "description": "monorepo for a media-share project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DanyFc",
+  "license": "ISC"
+}
