@@ -27,3 +27,23 @@ export const createLink = async (req, res) => {
     }
   }
 }
+
+export const getLink = async (req, res, next) => {
+  const link = await Link.findOne({ url: req.params.url })
+  if (!link) {
+    return res
+      .status(404)
+      .json({ errors: [{ msg: 'The requested link could not be found.' }] })
+  }
+  res
+    .status(200)
+    .json({ file: link.name })
+  if (link.downloads === 1) {
+    req.file = link.name
+    await Link.findOneAndDelete(req.params.url)
+    next()
+  } else {
+    link.downloads--
+    await link.save()
+  }
+}
