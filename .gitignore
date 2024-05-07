@@ -130,3 +130,5 @@ dist
 server/node_modules/
 server/.env
 server/.vscode
+server/requests/files/
+server/uploads

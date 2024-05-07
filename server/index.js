@@ -2,6 +2,7 @@ import authRoutes from './routes/auth.js'
 import connectDB from './config/db.js'
 import cors from 'cors'
 import express from 'express'
+import fileRoutes from './routes/file.js'
 import linkRouter from './routes/link.js'
 import userRoutes from './routes/user.js'
 
@@ -15,6 +16,7 @@ app.use(express.json({ extended: true }))
 app.use('/api/user', userRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/link', linkRouter)
+app.use('/api/file', fileRoutes)
 
 app.get('/', (req, res) => {
   const html = `
