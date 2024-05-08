@@ -1,4 +1,5 @@
 import './globals.css'
+import { AuthProvider } from '@/context/auth/context'
 import { Roboto_Slab, PT_Sans } from 'next/font/google'
 import Header from '@/components/header'
 
@@ -25,10 +26,12 @@ export default function RootLayout({ children }) {
       <body>
         <div className='bg-gray-100 min-h-screen'>
           <div className='container mx-auto'>
-            <Header />
-            <main className='mt-12'>
-              {children}
-            </main>
+            <AuthProvider>
+              <Header />
+              <main className='mt-12'>
+                {children}
+              </main>
+            </AuthProvider>
           </div>
         </div>
       </body>
