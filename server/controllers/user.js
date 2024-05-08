@@ -24,7 +24,12 @@ export const createUser = async (req, res) => {
       const savedUser = await newUser.save()
       return res
         .status(201)
-        .json(savedUser)
+        .json({
+          date: savedUser.date,
+          email: savedUser.email,
+          id: savedUser.id,
+          userName: savedUser.userName
+        })
     } catch (err) {
       return res
         .status(500)
