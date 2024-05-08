@@ -125,3 +125,10 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+#workspaces files and directories
+server/node_modules/
+server/.env
+server/.vscode
+server/requests/files/
+server/uploads
