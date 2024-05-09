@@ -1,8 +1,9 @@
-"use client"
+'use client'
 import { createContext, useReducer } from 'react'
-import { ERROR, LOGIN, LOGOUT, REGISTER } from "../types"
+import { CLEAR_ERROR, ERROR, LOGIN, LOGOUT, VALIDATE_SESSION } from '../types'
 import AuthReducer from './reducer'
 import axiosClient from '@/config/axios'
+import tokenAuth from '@/config/tokenAuth'
 
 export const AuthContext = createContext()
 
@@ -10,11 +11,22 @@ export const AuthProvider = ({ children }) => {
   const initialState = {
     authenticated: false,
     error: null,
-    token: null,
-    user: null,
+    token: typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('loggedAppUser'))?.token : null,
+    userName: typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('loggedAppUser'))?.userName : null,
+  }
+
+  if (initialState.token) {
+    tokenAuth(initialState.token)
   }
 
   const [state, dispatch] = useReducer(AuthReducer, initialState)
+
+  const showError = ({ msg = 'Opps! something goes wrong' }) => {
+    dispatch({ type: ERROR, payload: msg })
+    setTimeout(() => {
+      dispatch({ type: CLEAR_ERROR })
+    }, 3000)
+  }
 
   return (
     <AuthContext.Provider
@@ -22,32 +34,52 @@ export const AuthProvider = ({ children }) => {
         authenticated: state.authenticated,
         error: state.error,
         token: state.token,
-        user: state.user,
-        register: async (name, email, password) => {
+        userName: state.userName,
+        register: async (newUser) => {
           try {
-
-
+            const response = await axiosClient.post('/api/user', newUser)
+            if (response) {
+              const loggedUser = await axiosClient.post('/api/auth', {
+                account: newUser.email,
+                password: newUser.password
+              })
+              dispatch({ type: LOGIN, payload: loggedUser.data })
+            }
           } catch (error) {
-            console.log('Error creating user: ', error.message)
-            throw new Error("Registration failed,  please try again.")
+            showError(error.response.data.errors[0])
+            throw new Error('Registration failed,  please try again.')
+          }
+        },
+        logIn: async (user) => {
+          try {
+            const response = await axiosClient.post('/api/auth', user)
+            dispatch({ type: LOGIN, payload: response.data })
+          } catch (error) {
+            showError(error.response.data.errors[0])
+            throw new Error('Login failed,  please try again.')
+          }
+        },
+        validateSession: async () => {
+          try {
+            if (state.token) {
+              const response = await axiosClient.get('/api/auth')
+              if (response.data.id) {
+                dispatch({ type: VALIDATE_SESSION })
+              }
+            }
+          } catch (error) {
+            dispatch({ type: LOGOUT })
+            throw new Error('Validation failed.')
           }
         },
         logOut: async () => {
           try {
-
+            dispatch({ type: LOGOUT })
           } catch (error) {
-            console.log('Error to log out', error.message)
-            throw new Error("Logout failed, please try again.")
+            showError(error.response.data.errors[0])
+            throw new Error('Logout failed, please try again.')
           }
-        },
-        logIn: async (email, password) => {
-          try {
-
-          } catch (error) {
-            console.log('Error logging in: ', error.message)
-            throw new Error("Unable to login, please check your credentials.")
-          }
-        },
+        }
       }}
     >
       {children}
