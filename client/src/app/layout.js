@@ -1,5 +1,6 @@
 import './globals.css'
 import { AuthProvider } from '@/context/auth/context'
+import { FileProvider } from '@/context/file/context'
 import { Roboto_Slab, PT_Sans } from 'next/font/google'
 import Header from '@/components/header'
 
@@ -28,9 +29,11 @@ export default function RootLayout({ children }) {
           <div className='container mx-auto'>
             <AuthProvider>
               <Header />
-              <main className='mt-12'>
-                {children}
-              </main>
+              <FileProvider>
+                <main className='mt-12'>
+                  {children}
+                </main>
+              </FileProvider>
             </AuthProvider>
           </div>
         </div>
