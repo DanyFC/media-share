@@ -6,9 +6,9 @@ import shortid from 'shortid'
 export const createLink = async (req, res) => {
   const errors = expressValidator(req, res)
   if (!errors) {
-    const { originalName, userId, downloads, password } = req.body
+    const { downloads, name, originalName, password, userId } = req.body
     const id = shortid.generate()
-    const link = new Link({ name: `${id}.${originalName.split('.')[1]}`, originalName, url: id })
+    const link = new Link({ name, originalName, url: id })
     if (userId) {
       link.author = userId
       if (downloads) { link.downloads = downloads }
@@ -16,7 +16,6 @@ export const createLink = async (req, res) => {
     }
     try {
       const savedLink = await link.save()
-      console.log('🚀 ~ createLink ~ savedLink:', savedLink)
       return res
         .status(201)
         .json(savedLink)
