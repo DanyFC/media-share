@@ -33,10 +33,16 @@ export const uploadFile = async (req, res) => {
   })
 }
 
-export const deleteFile = async (req, res) => {
-  try {
-    fs.unlinkSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '/../uploads', req.file))
-  } catch (error) {
-    console.log(`Server error trying to delete the file ${req.file}: ${error}`)
-  }
+export const downloadFile = (req, res) => {
+  const file = path.join(path.dirname(fileURLToPath(import.meta.url)), '/../uploads', req.params.file)
+  res.download(file)
+  setTimeout(() => {
+    if (req.delete) {
+      try {
+        fs.unlinkSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '/../uploads', req.params.file))
+      } catch (error) {
+        console.log(`Server error trying to delete the file ${req.file}: ${error}`)
+      }
+    }
+  }, 3000)
 }
