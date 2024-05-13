@@ -13,6 +13,8 @@ connectDB()
 app.use(cors())
 app.use(express.json({ extended: true }))
 
+app.use(express.static('./uploads'))
+
 app.use('/api/user', userRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/link', linkRouter)
