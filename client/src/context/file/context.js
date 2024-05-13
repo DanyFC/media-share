@@ -55,7 +55,7 @@ export const FileProvider = ({ children }) => {
             originalName: state.file.originalName,
             password: password
           })
-          dispatch({ type: CREATE_LINK, payload: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/links/${response.data.url}` })
+          dispatch({ type: CREATE_LINK, payload: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/link/${response.data.url}` })
         } catch (error) {
           showError(error.response.data.errors[0])
           throw new Error('Something went wrong while creating a link for your file.')

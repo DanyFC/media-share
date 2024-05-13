@@ -1,24 +1,39 @@
-import { useCallback } from 'react'
+import { AuthContext } from '@/context/auth/context'
+import { FileContext } from '@/context/file/context'
+import { useCallback, useContext, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
-import axiosClient from '@/config/axios'
+import DetailForm from './detailForm'
 
 const DropZone = () => {
+  const { createLink, loading, uploadFile, showError } = useContext(FileContext)
+  const { authenticated } = useContext(AuthContext)
+  const [detailForm, setDetailForm] = useState({
+    downloads: 1,
+    password: ''
+  })
+
   const onDropAccepted = useCallback(async (acceptedFiles) => {
     const formData = new FormData()
     formData.append('file', acceptedFiles[0])
-    //const response = await axiosClient.post('/api/file', formData)
-    //console.log("🚀 ~ onDrop ~ response:", response)
-    console.log("🚀 ~ onDrop ~ formData:", formData)
+    try {
+      await uploadFile(formData)
+    } catch (err) {
+      //! no need to handle the error
+    }
   }, [])
 
   const onDropRejected = useCallback(async () => {
-    console.log('File rejection happened.')
+    showError({ msg: 'The file exceeds 1MB, create an account to upload larger files.' })
   }, [])
 
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({ onDropAccepted, onDropRejected, maxSize: 1000000 })
 
+  const handleClick = () => {
+    createLink(detailForm)
+  }
+
   return (
-    <div className='md:flex-1 mb-3 mx-2 mt-16 lg:mt-0 flex flex-col items-center justify-center border-dashed border-primary border-2 bg-gray-100 px-4  md:h-[300px]'>
+    <div className='md:flex-1 mb-3 mx-2 mt-16 lg:mt-0 flex flex-col items-center justify-center border-dashed border-primary border-2 bg-gray-100 px-4 md:h-[350px]'>
       {
         acceptedFiles.length > 0
           ? (
@@ -30,7 +45,12 @@ const DropZone = () => {
                   <p className='text-lg text-gray-500 text-center'>{(acceptedFiles[0].size / Math.pow(1024, 2)).toFixed(2)} MB</p>
                 </li>
               </ul>
-              <button className='bg-primary w-full py-3 rounded-lg text-white my-10 hover:bg-black font-bold'>Create link</button>
+              {authenticated ? <DetailForm detailForm={detailForm} setDetailForm={setDetailForm} /> : null}
+              {
+                !loading
+                  ? <button className='bg-primary w-full py-3 rounded-lg text-white my-10 hover:bg-black font-bold' onClick={handleClick}>Create link</button>
+                  : <p className='text-center text-gray-400 text-2xl py-3'>Uploading File...</p>
+              }
             </div>
           )
           : (

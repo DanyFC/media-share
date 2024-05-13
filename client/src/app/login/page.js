@@ -27,7 +27,7 @@ const Login = () => {
       try {
         await logIn(values)
       } catch (err) {
-        console.log(err.message)
+        //! no need to handle the error
       }
     }
   })

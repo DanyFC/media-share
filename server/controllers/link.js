@@ -27,22 +27,33 @@ export const createLink = async (req, res) => {
   }
 }
 
-export const getLink = async (req, res, next) => {
+export const getFileInfo = async (req, res) => {
   const link = await Link.findOne({ url: req.params.url })
   if (!link) {
     return res
       .status(404)
       .json({ errors: [{ msg: 'The requested link could not be found.' }] })
   }
-  res
+  const password = !!link.password
+  return res
     .status(200)
-    .json({ file: link.name })
-  if (link.downloads === 1) {
-    req.file = link.name
-    await Link.findOneAndDelete(req.params.url)
+    .json({ name: link.name, password })
+}
+
+export const decrementLink = async (req, res, next) => {
+  try {
+    const link = await Link.findOne({ name: req.params.file })
+    if (link.downloads === 1) {
+      await Link.findOneAndDelete(req.params.url)
+      req.delete = true
+    } else {
+      req.delete = false
+      link.downloads--
+      await link.save()
+    }
     next()
-  } else {
-    link.downloads--
-    await link.save()
+  } catch (error) {
+    return res
+      .redirect(process.env.FRONT_URL)
   }
 }
