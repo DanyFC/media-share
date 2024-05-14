@@ -8,3 +8,4 @@ export const LOADING = 'LOADING'
 
 export const ERROR = 'ERROR'
 export const CLEAR_ERROR = 'CLEAR_ERROR'
+export const CLEAR_CONTEXT = 'CLEAR_CONTEXT'

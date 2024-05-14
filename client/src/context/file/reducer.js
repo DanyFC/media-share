@@ -1,4 +1,4 @@
-import { CLEAR_ERROR, CREATE_LINK, ERROR, LOADING, UPLOAD_FILE } from '../types'
+import { CLEAR_CONTEXT, CLEAR_ERROR, CREATE_LINK, ERROR, LOADING, UPLOAD_FILE } from '../types'
 const FileReducer = (state, action) => {
   switch (action.type) {
     case UPLOAD_FILE:
@@ -18,6 +18,14 @@ const FileReducer = (state, action) => {
         ...state,
         loading: true,
         error: null
+      }
+    case CLEAR_CONTEXT:
+      return {
+        ...state,
+        error: null,
+        file: null,
+        loading: false,
+        url: null
       }
     case ERROR:
       return {

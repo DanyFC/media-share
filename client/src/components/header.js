@@ -1,16 +1,25 @@
 "use client"
-import { AuthContext } from "@/context/auth/context"
-import Link from "next/link"
-import { useContext } from "react"
+import { AuthContext } from '@/context/auth/context'
+import { FileContext } from '@/context/file/context'
+import { useContext } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 const Header = () => {
   const { authenticated, userName, logOut } = useContext(AuthContext)
+  const { clearContext } = useContext(FileContext)
+  const router = useRouter()
+
+  const handleClick = () => {
+    clearContext()
+    router.push('/')
+  }
 
   return (
     <header className='py-8 flex flex-col md:flex-row items-center justify-between'>
-      <Link href='/' className='cursor-pointer'>
+      <div className='cursor-pointer' onClick={handleClick}>
         <p className='font-extrabold text-5xl my-2 font-roboto-slab'><span className='text-primary'>MEDIA</span> SHARE</p>
-      </Link>
+      </div>
       <div className='flex flex-row gap-6 items-center'>
         {
           authenticated

@@ -1,5 +1,5 @@
 "use client"
-import { CLEAR_ERROR, CREATE_LINK, ERROR, LOADING, UPLOAD_FILE } from '../types'
+import { CLEAR_CONTEXT, CLEAR_ERROR, CREATE_LINK, ERROR, LOADING, UPLOAD_FILE } from '../types'
 import { createContext, useReducer } from 'react'
 import axiosClient from '@/config/axios'
 import FileReducer from './reducer'
@@ -60,6 +60,9 @@ export const FileProvider = ({ children }) => {
           showError(error.response.data.errors[0])
           throw new Error('Something went wrong while creating a link for your file.')
         }
+      },
+      clearContext: () => {
+        dispatch({ type: CLEAR_CONTEXT })
       }
     }}
   >
