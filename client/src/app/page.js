@@ -8,7 +8,7 @@ import Link from 'next/link'
 import Url from '@/components/url'
 
 const Home = () => {
-  const { authenticated, validateSession } = useContext(AuthContext)
+  const { validateSession } = useContext(AuthContext)
   const { error, url } = useContext(FileContext)
 
   useEffect(() => {
