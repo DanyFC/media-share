@@ -1,17 +1,21 @@
-import { createLink, getLink } from '../controllers/link.js'
-import { deleteFile } from '../controllers/file.js'
+import { body } from 'express-validator'
+import { createLink, getFileInfo, validatePassword } from '../controllers/link.js'
 import { userExtractor } from './../utils/userExtractor.js'
 import express from 'express'
-import { body } from 'express-validator'
 
 const router = express.Router()
 
 router.post('/', userExtractor, [
   body('originalName')
     .exists().withMessage('Original name field is required.')
-    .not().isEmpty().withMessage('Original name cant be empty.')
+    .not().isEmpty().withMessage('Original name cant be empty.'),
+  body('name')
+    .exists().withMessage('Name field is required.')
+    .not().isEmpty().withMessage('Name cant be empty.')
 ], createLink)
 
-router.get('/:url', getLink, deleteFile)
+router.get('/:url', getFileInfo)
+
+router.post('/:url', validatePassword)
 
 export default router

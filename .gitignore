@@ -130,5 +130,11 @@ dist
 server/node_modules/
 server/.env
 server/.vscode
+<<<<<<< Updated upstream
+=======
 server/requests/files/
 server/uploads
+client/node_modules/
+client/.env
+client/.vscode
+>>>>>>> Stashed changes

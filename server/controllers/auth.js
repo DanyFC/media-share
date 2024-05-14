@@ -28,7 +28,7 @@ export const authenticateUser = async (req, res) => {
       if (!(user && passwordCorrect)) {
         return res
           .status(401)
-          .json({ errors: [{ msg: '¨Invalid username or password.' }] })
+          .json({ errors: [{ msg: 'Wrong Password, try again.' }] })
       }
 
       const userForToken = {
