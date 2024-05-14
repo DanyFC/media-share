@@ -57,3 +57,16 @@ export const decrementLink = async (req, res, next) => {
       .redirect(process.env.FRONT_URL)
   }
 }
+
+export const validatePassword = async (req, res) => {
+  const link = await Link.findOne({ url: req.params.url })
+  if (!link) {
+    return res
+      .status(404)
+      .json({ errors: [{ msg: 'Error to validate or invalid password.' }] })
+  }
+  const valid = await bcrypt.compare(req.body.password, link.password)
+  return res
+    .status(200)
+    .json(valid)
+}

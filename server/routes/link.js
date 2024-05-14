@@ -1,5 +1,5 @@
 import { body } from 'express-validator'
-import { createLink, getFileInfo } from '../controllers/link.js'
+import { createLink, getFileInfo, validatePassword } from '../controllers/link.js'
 import { userExtractor } from './../utils/userExtractor.js'
 import express from 'express'
 
@@ -15,5 +15,7 @@ router.post('/', userExtractor, [
 ], createLink)
 
 router.get('/:url', getFileInfo)
+
+router.post('/:url', validatePassword)
 
 export default router
