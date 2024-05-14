@@ -28,8 +28,8 @@ export default function RootLayout({ children }) {
         <div className='bg-gray-100 min-h-screen'>
           <div className='container mx-auto'>
             <AuthProvider>
-              <Header />
               <FileProvider>
+                <Header />
                 <main className='mt-12'>
                   {children}
                 </main>
